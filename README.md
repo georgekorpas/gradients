@@ -50,16 +50,16 @@ Meaning the fastest AR value is 6 ticks = 1/16 (tried with less ticks but I was 
 
 ---
 
-## Mode-by-mode algorithms
+## The `MODES`
 
-### 1) AutoRegressive mode
+### (1) AutoRegressive mode
 
-**Two-way coupling:**
+The idea is that of a two-way coupling:
 
 * previous **pitch → next duration**
 * previous **duration → next pitch**
 
-#### A) Duration update (pitch → duration)
+For the duration update (pitch → duration) we have:
 
 1. Compute a continuous duration target (ticks):
 
@@ -72,27 +72,27 @@ Meaning the fastest AR value is 6 ticks = 1/16 (tried with less ticks but I was 
    $\text{metric} = \sqrt{\text{deg}} + 0.9\cdot \text{reg}$
 
 3. Apply Helicity and Rate:
-   [
+   $
    \tilde{D}_t = 4.0\cdot \text{helicScale}(h)\cdot \text{metric}\cdot \text{RateFactor}
-   ]
+   $
 
-Helicity mapping is exponential:
-[
+Helicity mapping is chosent to be exponential:
+$
 \text{helicScale}(h) = 0.4\cdot 7^{h/127}
-]
+$
 
 4. Add mild autoregressive “duration feedback” (so it doesn’t lock to constant 16ths):
-   [
+   $
    \tilde{D}_t \leftarrow \tilde{D}*t\cdot \Big(0.90 + 0.25\cdot \mathrm{clip}(D*{t-1}/24,0,1.5)\Big)
-   ]
+   $
 
 5. Quantize:
-   [
+   $
    D_t = \text{QuantizeToGrid}(\tilde{D}_t)
-   ]
+   $
    with the grid above.
 
-✅ So AR timing is quantized and truly depends on the previous pitch.
+So AR timing is quantized and truly depends on the previous pitch.
 
 #### B) Pitch update (duration → pitch)
 
