@@ -80,9 +80,7 @@ $\text{helicScale}(h) = 0.4\cdot 7^{h/127}$
 4. Add mild autoregressive “duration feedback” (so it doesn’t lock to constant 16ths):
    $\tilde{D}_t \leftarrow \tilde{D}*t\cdot \Big( 0.90 + 0.25\cdot \mathrm{clip}(D*{t-1}/24,0,1.5) \Big)$
 
-5. Quantize:
-   $D_t = \text{QuantizeToGrid}(\tilde{D}_t)$
-   with the grid above.
+5. Quantize $D_t$ to the grid above.
 
 So AR timing is quantized and truly depends on the previous pitch.
 
