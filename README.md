@@ -26,12 +26,12 @@ Finally, the pitch generator is always scale-aware and mask-aware, and in AR mod
 
 ## Timebase and quantization
 
-Everything runs in MIDI clock ticks at 24 PPQN:
+Everything runs in MIDI clock ticks at 24 PPQN with either of:
 
 * internal clock: `timer.setBpm(tempo * 24)`
 * external clock: `transport.onClock()` is called once per incoming MIDI clock tick
 
-So:
+Therefore:
 
 * `24 ticks = 1 quarter note`
 * `12 ticks = 1/8`
@@ -42,11 +42,11 @@ So:
 
 AR mode never outputs arbitrary tick lengths. It snaps to a fixed **grid**.
 
-In v59_FIXED, the AR grid is:
+In the current version, the AR grid is:
 
 `{ 6, 8, 9, 12, 16, 18, 24, 36, 48 }`
 
-Meaning the fastest AR value is **6 ticks = 1/16**, so you don’t get surprise 1/32 bursts.
+Meaning the fastest AR value is 6 ticks = 1/16 (tried with less ticks but I was getting these "surprise" 1/32 bursts which were not musical to my ears).
 
 ---
 
