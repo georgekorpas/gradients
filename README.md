@@ -136,15 +136,14 @@ No AR coupling in timing (only pitch selection uses previous duration if you kee
 Gravity applies a contextual pull back toward tonic, stronger when you drift high.
 
 Weight multiplier:
-[
-w \leftarrow w \cdot \frac{1}{1 + g_\text{eff} d^2}
-]
+$w \leftarrow w \cdot \frac{1}{1 + g_\text{eff} d^2}$
+
 where
 
-* (d = |n - root|/12) (octave distance)
-* (g_\text{eff}) grows with register, so high notes pull back more
+* $d = |n - {\rm root}|/12$ (octave distance)
+* $g_\text{eff}$ grows with register, so high notes pull back more
 
-Intuition: **melody can roam, but it “comes home.”**
+Intuition is that the **melody can roam, but it “comes home.”**
 
 ### Contour
 
@@ -153,124 +152,17 @@ Contour biases upward vs downward steps.
 * If candidate pitch > current pitch → multiply by `contourUp`
 * If candidate pitch < current pitch → multiply by `contourDown`
 
-So you get a “steering wheel” feel:
-
-* turn Contour up → more rising lines
-* turn it down → more descending lines
+So we get a “steering wheel” feel such that if we turn Contour up → more rising lines
+and if we turn it down → more descending lines
 
 ### Phrase Length
 
-Phrase forces a cadence to tonic every L notes.
+Phrase forces a cadence to tonic every $L$ notes.
 
 * Phrase OFF → no cadence
 * Phrase = 8 → every 8 events, next note forced to tonic
 
-This is very effective for “musical sentences.”
+This is a way to enforce more “musical sentences.” Not always effective, especially in the AR mode I feel.
 
----
 
-## How to test Gravity / Contour / Phrase (fast + reliable)
 
-### Before starting (common setup)
-
-Use settings that make behavior obvious:
-
-* MODE: **AutoRegressive**
-* RESTS: **Off**
-* ROOT EMPH: **Off** (temporarily) — so Gravity’s effect is not masked by tonic weighting
-* OCT CUT: 3–4 oct
-* SPREAD: medium/high
-* Rate: 1 (neutral)
-* Mask: enable the scale normally (don’t remove many notes)
-
-#### Optional: make it measurable
-
-In your DAW, record MIDI for ~30 seconds and inspect the piano roll.
-
----
-
-### A) Test Gravity
-
-**Goal:** with high Gravity, pitches should spend more time near tonic, and return faster after climbing.
-
-1. Set **Gravity = 0** (full left)
-
-2. Let it run 20–30 seconds
-
-   * Note the register drift: it should wander more widely.
-
-3. Set **Gravity = max** (full right)
-
-4. Let it run again
-   Expected:
-
-   * fewer sustained high-register runs
-   * more frequent returns toward tonic region
-   * smaller “average pitch” over time
-
-**Quick quantitative check (in piano roll):**
-
-* Compare mean MIDI note number (average pitch) across the two recordings.
-  Gravity high should reduce the mean and the variance.
-
----
-
-### B) Test Contour
-
-**Goal:** Contour should bias direction of motion.
-
-1. Set **Contour = center** (neutral) → baseline
-
-2. Set **Contour high** (full right)
-   Expected:
-
-   * more upward steps than downward steps
-   * rising phrases more common
-
-3. Set **Contour low** (full left)
-   Expected:
-
-   * more downward steps than upward steps
-   * falling phrases more common
-
-**Quick quantitative check (in MIDI):**
-Count how many note-to-note intervals are positive vs negative.
-
-* Contour high → %positive > %negative
-* Contour low → %negative > %positive
-
----
-
-### C) Test Phrase Length
-
-**Goal:** phrase cadence should be unmistakable.
-
-1. Set Phrase = **Off**
-
-2. Listen: no periodic “home punctuation”
-
-3. Set Phrase = **8**
-
-4. Listen: you should hear an obvious “return to tonic” punctuation roughly every 8 events.
-
-**Very obvious test:**
-
-* Temporarily set mask so only **tonic + 5th + 2nd** are enabled.
-* Phrase = 8 will sound like a clear cadence back to tonic.
-
-If you don’t hear it, it means the cadence trigger isn’t firing — but in v59_FIXED it should.
-
----
-
-## If something feels subtle
-
-Gravity and Root Emph both pull “home”, but they do it differently:
-
-* **Root Emph** = “tonic is always more likely, regardless of context”
-* **Gravity** = “the further you drift, the stronger the pull back”
-
-So if Root Emph is high, Gravity can feel less dramatic. For testing: set Root Emph OFF.
-
----
-
-If you want, I can add a tiny “debug” overlay in the info bar (only when you hold a button) to show live values like current reg, chosen dur ticks, phrase counter. That makes verifying behavior even easier without touching MIDI routing.
