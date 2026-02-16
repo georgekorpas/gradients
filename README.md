@@ -77,41 +77,33 @@ For the duration update (pitch → duration) we have:
    $
 
 Helicity mapping is chosent to be exponential:
-$
-\text{helicScale}(h) = 0.4\cdot 7^{h/127}
-$
+$\text{helicScale}(h) = 0.4\cdot 7^{h/127}$
 
 4. Add mild autoregressive “duration feedback” (so it doesn’t lock to constant 16ths):
-   $
-   \tilde{D}_t \leftarrow \tilde{D}*t\cdot \Big(0.90 + 0.25\cdot \mathrm{clip}(D*{t-1}/24,0,1.5)\Big)
-   $
+   $\tilde{D}_t \leftarrow \tilde{D}*t\cdot \Big(0.90 + 0.25\cdot \mathrm{clip}(D*{t-1}/24,0,1.5)\Big)$
 
 5. Quantize:
-   $
-   D_t = \text{QuantizeToGrid}(\tilde{D}_t)
-   $
+   $D_t = \text{QuantizeToGrid}(\tilde{D}_t)$
    with the grid above.
 
 So AR timing is quantized and truly depends on the previous pitch.
 
-#### B) Pitch update (duration → pitch)
+For the pitch update (duration → pitch) we have:
 
-Pitch is sampled from the **allowed note set** (scale + OCT CUT + SPREAD + mask), using weighted roulette.
+The pitch is sampled from the allowed note set (scale + OCT CUT + SPREAD + mask), using weighted roulette.
 
 Weights include:
 
-* proximity to the “target index” implied by the previous duration (duration→pitch coupling)
-* **ROOT EMPH** (tonic and fifth weighting)
-* **jump penalty** discouraging huge leaps
-* **recent-note penalty** discouraging short loops
-* **Gravity** (pull toward tonic)
-* **Contour** (prefer rising/falling motion)
+* proximity to the “target index”: implied by the previous duration (duration→pitch coupling)
+* jump penalty: discouraging huge leaps
+* recent-note penalty: discouraging short loops
+* gravity: pull toward tonic
+* contour: prefer rising/falling motion
 
 Then a note is emitted unless the RESTS layer cancels it.
 
----
 
-### 2) Fixed step mode
+### (2) Fixed step mode
 
 * Step duration is taken from STEP selector (`1/4, 1/8, 1/16, …`)
 * Duration is multiplied by `RateFactor`
