@@ -110,26 +110,26 @@ Then a note is emitted unless the RESTS layer cancels it.
 
 No AR coupling in timing (only pitch selection uses previous duration if you keep it; but the main “autoregressive feel” is in AR mode).
 
----
 
-### 3) Groove pattern mode (16-step rhythms)
+
+### (3) Groove pattern mode (16-step rhythms)
 
 * A 16-step hit/rest pattern (clave/tresillo/etc) decides whether each step is a hit.
 * Step duration depends on Helicity (scaled) and Rate.
 * If pattern says rest → it forces note-off and advances time.
 * If hit → plays a note (pitch uses a walk generator in this mode).
 
----
 
-### 4) Custom mode (your 8-step pattern)
 
-* Your 8 toggles decide hit/rest.
-* Step duration is your C STEP (same as STEP) times RateFactor.
+### (4) Custom mode (your 8-step pattern)
+
+* There are 8 toggles to decide hit/rest.
+* Step duration is the C STEP (same as STEP) times RateFactor (probably need rething this).
 * Rest/hit behavior same as Groove mode.
 
 ---
 
-## The new performance controls
+## Performance controls
 
 ### Gravity
 
