@@ -69,9 +69,7 @@ Meaning the fastest AR value is 6 ticks = 1/16 (tried with less ticks but I was 
   `reg = floor((prevPitch - rootNote)/12)` clipped
 
 2. Build a metric:
-   $$
-   \text{metric} = \sqrt{\text{deg}} + 0.9\cdot \text{reg}
-   $$
+   $\text{metric} = \sqrt{\text{deg}} + 0.9\cdot \text{reg}$
 
 3. Apply Helicity and Rate:
    [
